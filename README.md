@@ -14,3 +14,5 @@ Abaixo o diagrama que demonstra as relações entre as entidades do sistema.
 
 <img src="https://raw.githubusercontent.com/vinxavier/CadStu/master/diagramaER.jpg" width="450px" tittle="Protótipo CatStud"/>
 
+Como ambas as relações são 1 para 1 e ambas são entidades fracas, então é preferível juntar tudo em uma única tabela.
+
