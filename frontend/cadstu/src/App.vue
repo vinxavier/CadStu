@@ -1,10 +1,9 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+    <h1>__CadStu__</h1>
+    <div class="router-container">
+      <router-view/>
     </div>
-    <router-view/>
   </div>
 </template>
 
@@ -15,6 +14,13 @@
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
+  background: #f3d9ea;
+}
+h1 {
+  padding: 20px;
+  color: white;
+  font-weight: bold;
+  background: #8a085c;
 }
 #nav {
   padding: 30px;
@@ -25,5 +31,14 @@
       color: #42b983;
     }
   }
+}
+.router-container{
+  border-radius: 10px;
+  background: #f5f5f5;
+  margin: 40px;
+  padding: 8px;
+}
+html{
+  background: #f3d9ea;
 }
 </style>
