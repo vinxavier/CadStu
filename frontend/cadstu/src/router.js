@@ -15,7 +15,7 @@ export default new Router({
       component: Home
     },
     {
-      path: '/aluno',
+      path: '/aluno/:id',
       name: 'aluno',
       component: Aluno
     }

@@ -151,8 +151,7 @@
           </div>
         </div>
 
-        <b-button type="submit" variant="primary">Submit</b-button>
-        <b-button type="reset" variant="danger">Reset</b-button>
+        <b-button type="submit" variant="primary">{{ editando? 'Salvar Alterações': "Salvar" }}</b-button>
       </b-form>
     </b-container>
   </div>
@@ -160,7 +159,7 @@
 
 <script>
 import Vue from 'vue'
-import { mapActions } from "vuex"
+import { mapState, mapActions } from "vuex"
 export default {
   data() {
     return {
@@ -179,35 +178,50 @@ export default {
         cpf_mae: "",
         data_mens: null
       },
-      cepValido: false
+      cepValido: false,
+      editando: false
     };
+  },
+  computed: {
+    ...mapState([
+      'students'
+    ])
   },
   methods: {
     ...mapActions([
-      "novoAluno"
+      "novoAluno",
+      "editarAluno"
       ]),
     handleSubmit() {
       if(this.cepValido){
         const aluno = this.formData;
-        this.novoAluno(aluno);
-
-        // reset form data
-        this.formData = {
-          nome: "",
-          nascimento: "",
-          serie: null,
-          cep: "",
-          rua: "",
-          numero: null,
-          complemento: "",
-          bairro: "",
-          cidade: "",
-          estado: "",
-          nome_mae: "",
-          cpf_mae: "",
-          data_mens: null
+        if(!this.editando){
+          this.novoAluno(aluno);
+          // reset form data
+          this.formData = {
+            nome: "",
+            nascimento: "",
+            serie: null,
+            cep: "",
+            rua: "",
+            numero: null,
+            complemento: "",
+            bairro: "",
+            cidade: "",
+            estado: "",
+            nome_mae: "",
+            cpf_mae: "",
+            data_mens: null
+          }
+          this.cepValido = false
+        } else {
+          const index = this.$route.params.id
+          const payload = {
+            aluno,
+            index
+          }
+          this.editarAluno(payload)
         }
-        this.cepValido = false
       }else {
         alert("Cep não válido")
       }
@@ -249,6 +263,14 @@ export default {
             this.cepValido = true
           }
       })
+    }
+  },
+  mounted () {
+    if(this.$route.params.id!=='novo'){
+      const student = this.students[this.$route.params.id]
+      this.formData = student
+      this.cepValido = true
+      this.editando = true
     }
   }
 }

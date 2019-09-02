@@ -4,5 +4,8 @@ export default {
   },
   deletarAluno: ({commit}, index) => {
     commit('apagaAluno', index)
+  },
+  editarAluno: ({commit}, payload) => {
+    commit('editAluno', payload)
   }
 }
