@@ -15,7 +15,7 @@
             <b-button @click="deletarAluno(item.index)" size="sm" class="mr-2">
               Deletar
             </b-button>
-            <b-button size="sm" class="mr-2">
+            <b-button size="sm" @click="navigateEdit(item.index)" class="mr-2">
               Editar
             </b-button>
           </template>
@@ -27,7 +27,7 @@
 
 <script>
 import { mapGetters, mapActions } from 'vuex'
-
+import router from '../router'
 export default {
   name: 'home',
   data () {
@@ -44,6 +44,9 @@ export default {
     ...mapActions([
       "deletarAluno"
     ]),
+    navigateEdit (index) {
+      router.push({path: 'aluno/'+index})
+    }
   }
 }
 </script>
