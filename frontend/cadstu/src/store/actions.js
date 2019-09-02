@@ -1,5 +1,5 @@
 export default {
-  novoAluno: ({ commit }, payload) => {
-    commit('adicionaAluno', payload)
+  novoAluno: ({ commit }, aluno) => {
+    commit('adicionaAluno', aluno)
   }
 }

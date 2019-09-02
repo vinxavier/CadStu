@@ -1,5 +1,5 @@
 export default {
-  adicionaAluno: (state, { aluno }) => {
+  adicionaAluno: (state, aluno) => {
     state.students.push(aluno)
   }
 }

@@ -1,5 +1,8 @@
 <template>
   <div>
+    <div class="button-container">
+      <router-link to="/" class="btn btn-primary">Home</router-link>
+    </div>
     <h2>Informações do Estudante</h2>
     <b-container>
       <b-form @submit.prevent="handleSubmit">
@@ -186,10 +189,7 @@ export default {
     handleSubmit() {
       if(this.cepValido){
         const aluno = this.formData;
-        const payload = {
-          aluno
-        };
-        this.novoAluno(payload);
+        this.novoAluno(aluno);
 
         // reset form data
         this.formData = {
@@ -264,5 +264,8 @@ export default {
 h3 {
   font-size: 18px;
   font-weight: bold;
+}
+.button-container {
+  margin-bottom: 20px;
 }
 </style>
