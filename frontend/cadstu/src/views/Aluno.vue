@@ -44,10 +44,11 @@
                   id="input-4" 
                   required 
                   maxlength="8"
+                  minlength="8"
                   @keyup="onKeyUp" 
                   @keydown="onKeyDown($event)"
                   v-model="formData.cep" 
-                  placeholder="00000-000">
+                  placeholder="00000000">
                 </b-form-input>
               </b-form-group>
             </div>
@@ -84,6 +85,7 @@
                 <b-form-input
                   id="input-8"
                   maxlength="100"
+                  required
                   v-model="formData.bairro"
                   placeholder="Digite o bairro"
                 ></b-form-input>
@@ -94,6 +96,7 @@
                 <b-form-input
                   id="input-9"
                   maxlength="100"
+                  required
                   v-model="formData.cidade"
                   placeholder="Digite a cidade"
                 ></b-form-input>
@@ -104,6 +107,7 @@
                 <b-form-input
                   id="input-10"
                   maxlength="2"
+                  required
                   v-model="formData.estado"
                   placeholder="UF"
                 ></b-form-input>
@@ -171,7 +175,8 @@ export default {
         nome_mae: "",
         cpf_mae: "",
         data_mens: null
-      }
+      },
+      cepValido: false
     };
   },
   methods: {
@@ -179,27 +184,32 @@ export default {
       "novoAluno"
       ]),
     handleSubmit() {
-      const aluno = this.formData;
-      const payload = {
-        aluno
-      };
-      this.novoAluno(payload);
+      if(this.cepValido){
+        const aluno = this.formData;
+        const payload = {
+          aluno
+        };
+        this.novoAluno(payload);
 
-      // reset form data
-      this.formData = {
-        nome: "",
-        nascimento: "",
-        serie: null,
-        cep: "",
-        rua: "",
-        numero: null,
-        complemento: "",
-        bairro: "",
-        cidade: "",
-        estado: "",
-        nome_mae: "",
-        cpf_mae: "",
-        data_mens: null
+        // reset form data
+        this.formData = {
+          nome: "",
+          nascimento: "",
+          serie: null,
+          cep: "",
+          rua: "",
+          numero: null,
+          complemento: "",
+          bairro: "",
+          cidade: "",
+          estado: "",
+          nome_mae: "",
+          cpf_mae: "",
+          data_mens: null
+        }
+        this.cepValido = false
+      }else {
+        alert("Cep não válido")
       }
     },
     onKeyDown: function (e) {
@@ -223,13 +233,22 @@ export default {
       Vue.axios.get(url)
         .then((response) => {
           console.log(response)
-          this.formData.rua = response.data.logradouro
-          this.formData.bairro = response.data.bairro
-          this.formData.cidade = response.data.localidade
-          this.formData.estado = response.data.uf
-      }).catch((error =>{
-        console.log(error)
-      }))
+          if(response.data.erro){
+            this.formData.rua = ""
+            this.formData.bairro = ""
+            this.formData.cidade = ""
+            this.formData.estado = ""
+            this.cepValido = false
+            alert("Cep não válido")
+          }
+          else{
+            this.formData.rua = response.data.logradouro
+            this.formData.bairro = response.data.bairro
+            this.formData.cidade = response.data.localidade
+            this.formData.estado = response.data.uf
+            this.cepValido = true
+          }
+      })
     }
   }
 }
