@@ -20,7 +20,7 @@ h1 {
   padding: 20px;
   color: white;
   font-weight: bold;
-  background: #8a085c;
+  background: #4e0935;
 }
 #nav {
   padding: 30px;

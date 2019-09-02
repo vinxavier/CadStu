@@ -2,7 +2,7 @@
   <div>
     <h2>Informações do Estudante</h2>
     <b-container>
-      <b-form>
+      <b-form @submit.prevent="handleSubmit">
         <div class="form-container">
           <h3>Aluno</h3>
           <div class="row">
@@ -20,15 +20,10 @@
             </div>
             <div class="col-sm-3">
               <b-form-group id="input-group-2" label="Nascimento:" label-for="input-2">
-                <b-form-input
-                  id="input-2"
-                  type="date"
-                  v-model="formData.nascimento"
-                  required
-                ></b-form-input>
+                <b-form-input id="input-2" type="date" v-model="formData.nascimento" required></b-form-input>
               </b-form-group>
             </div>
-            <div class = "col-sm-3">
+            <div class="col-sm-3">
               <b-form-group id="input-group-3" label="Série:" label-for="input-3">
                 <b-form-select
                   id="input-3"
@@ -45,12 +40,15 @@
           <div class="row">
             <div class="col-sm-2">
               <b-form-group id="input-group-4" label="CEP:" label-for="input-4">
-                <b-form-input
-                  id="input-4"
-                  required
-                  v-model="formData.cep"
-                  placeholder="00000-000"
-                ></b-form-input>
+                <b-form-input 
+                  id="input-4" 
+                  required 
+                  maxlength="8"
+                  @keyup="onKeyUp" 
+                  @keydown="onKeyDown($event)"
+                  v-model="formData.cep" 
+                  placeholder="00000-000">
+                </b-form-input>
               </b-form-group>
             </div>
             <div class="col-sm-4">
@@ -66,13 +64,7 @@
             </div>
             <div class="col-sm-2">
               <b-form-group id="input-group-6" label="Número:" label-for="input-6">
-                <b-form-input
-                  id="input-6"
-                  required
-                  type="number"
-                  min="0"
-                  v-model="formData.numero"
-                ></b-form-input>
+                <b-form-input id="input-6" required type="number" min="0" v-model="formData.numero"></b-form-input>
               </b-form-group>
             </div>
             <div class="col-sm-3">
@@ -144,14 +136,9 @@
                 ></b-form-input>
               </b-form-group>
             </div>
-            <div class = "col-sm-3">
+            <div class="col-sm-3">
               <b-form-group id="input-group-13" label="Data para pagamento:" label-for="input-13">
-                <b-form-input
-                  id="input-13"
-                  v-model="formData.data_mens"
-                  type="date"
-                  required
-                ></b-form-input>
+                <b-form-input id="input-13" v-model="formData.data_mens" type="date" required></b-form-input>
               </b-form-group>
             </div>
           </div>
@@ -165,38 +152,98 @@
 </template>
 
 <script>
+import Vue from 'vue'
+import { mapActions } from "vuex"
 export default {
-  data () {
+  data() {
     return {
       formData: {
-        nome: '',
-        nascimento: '',
+        nome: "",
+        nascimento: "",
         serie: null,
-        cep: '',
-        rua: '',
+        cep: "",
+        rua: "",
         numero: null,
-        complemento: '',
-        bairro: '',
-        cidade: '',
-        estado: '',
-        nome_mae: '',
-        cpf_mae: '',
+        complemento: "",
+        bairro: "",
+        cidade: "",
+        estado: "",
+        nome_mae: "",
+        cpf_mae: "",
         data_mens: null
       }
+    };
+  },
+  methods: {
+    ...mapActions([
+      "novoAluno"
+      ]),
+    handleSubmit() {
+      const aluno = this.formData;
+      const payload = {
+        aluno
+      };
+      this.novoAluno(payload);
+
+      // reset form data
+      this.formData = {
+        nome: "",
+        nascimento: "",
+        serie: null,
+        cep: "",
+        rua: "",
+        numero: null,
+        complemento: "",
+        bairro: "",
+        cidade: "",
+        estado: "",
+        nome_mae: "",
+        cpf_mae: "",
+        data_mens: null
+      }
+    },
+    onKeyDown: function (e) {
+      if (
+        // permite somente numeros
+        (e.keyCode >= 48 && e.keyCode <= 57) ||
+        (e.keyCode >= 96 && e.keyCode <= 105) ||
+        // permite teclas lado direito, esquerdo, delete, backspace, tab e enter
+        /^(8|9|13|46|37|39|17)$/.test(e.keyCode) ||
+        // permite ctrl+ c,v,x,a,z
+        (/^(67|86|88|65|90)$/.test(e.keyCode) && e.ctrlKey)
+      ) {
+        return
+      }
+      e.preventDefault()
+      e.stopPropagation()
+    },
+    onKeyUp: function () {
+      if (!/^[0-9]{8}$/.test(this.formData.cep)) return
+      let url = 'https://viacep.com.br/ws/' + this.formData.cep + '/json/'
+      Vue.axios.get(url)
+        .then((response) => {
+          console.log(response)
+          this.formData.rua = response.data.logradouro
+          this.formData.bairro = response.data.bairro
+          this.formData.cidade = response.data.localidade
+          this.formData.estado = response.data.uf
+      }).catch((error =>{
+        console.log(error)
+      }))
     }
   }
 }
 </script>
 
 <style scoped>
-  .form-container{
-    background: rgb(227, 244, 255);
-    padding: 10px;
-    margin: 20px 0;
-    border-radius: 10px;
-  }
-  h3{
-    font-size:18px;
-    font-weight: bold;
-  }
+.form-container {
+  background: rgb(172, 212, 172);
+  padding: 10px;
+  margin: 20px 0;
+  border-radius: 10px;
+}
+h3 {
+  font-size: 18px;
+  font-weight: bold;
+}
 </style>
