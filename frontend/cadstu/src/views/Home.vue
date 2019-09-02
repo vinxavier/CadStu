@@ -11,8 +11,8 @@
               {{ data.value }}
             </router-link>
           </template>
-          <template slot="[action]">
-            <b-button size="sm" class="mr-2">
+          <template slot="[action]" slot-scope="item">
+            <b-button @click="deletarAluno(item.index)" size="sm" class="mr-2">
               Deletar
             </b-button>
             <b-button size="sm" class="mr-2">
@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 
 export default {
   name: 'home',
@@ -39,6 +39,11 @@ export default {
     ...mapGetters([
       'getStudentList'
     ])
+  },
+  methods: {
+    ...mapActions([
+      "deletarAluno"
+    ]),
   }
 }
 </script>
